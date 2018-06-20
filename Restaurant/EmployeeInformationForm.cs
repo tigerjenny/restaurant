@@ -31,50 +31,63 @@ namespace Restaurant
             Integrated Security=True;Connect Timeout=30");
             cn.Open();
 
-            SqlCommand cmd = new SqlCommand("CREATE OR ALTER VIEW boss_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary, b.location_id , b.tel , s.password FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id) WHERE s.staff_id > 0", cn);
-            cmd.ExecuteNonQuery();
+            //SqlCommand cmd = new SqlCommand("CREATE OR ALTER VIEW boss_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary, b.location_id , b.tel , s.password FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id) WHERE s.staff_id > 0", cn);
+            //cmd.ExecuteNonQuery();
             //SqlDataAdapter da = new SqlDataAdapter(cmd);
             //DataSet ds = new DataSet();
             //da.Fill(ds);
            // DataTable dt = ds.Tables[0];
 
-            cmd = new SqlCommand(" CREATE OR ALTER VIEW menage_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary, b.location_id, s.password FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id) WHERE s.staff_id > 20", cn);
-            cmd.ExecuteNonQuery();
+            //cmd = new SqlCommand(" CREATE OR ALTER VIEW menage_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary, b.location_id  FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id) WHERE s.staff_id > 20", cn);
+            //cmd.ExecuteNonQuery();
             // da = new SqlDataAdapter(cmd);
             //ds = new DataSet();
            // da.Fill(ds);
            // dt = ds.Tables[1];
 
-            cmd = new SqlCommand("CREATE OR ALTER VIEW normal_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary ,b.location_id FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id)", cn);
-            cmd.ExecuteNonQuery();
+            //cmd = new SqlCommand("CREATE OR ALTER VIEW normal_view AS SELECT s.staff_id, j.job_title, s.s_name, s.salary ,b.location_id FROM staffs s JOIN jobs j ON(s.job_id = j.job_id) JOIN branches b ON(s.branch_id = b.branch_id)", cn);
+           // cmd.ExecuteNonQuery();
             //da = new SqlDataAdapter(cmd);
-           // ds = new DataSet();
+            // ds = new DataSet();
             //da.Fill(ds);
             //dt = ds.Tables[2];
+            //BOSS_VIEW MENAGE_VIEW NORMAL_VIEW 直接在資料庫中創建了!!(檢視表)
+
+            load();
+            load2();
+            SqlDataAdapter da = new SqlDataAdapter();
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
 
             LoginForm Lf2;
             Lf2 = new LoginForm();
 
             if(Lf2.id() == 0)
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id,tel,password  FROM boss_view ", cn);
-                DataSet ds = new DataSet();
+                da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id,tel,password  FROM boss_view ", cn);
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
+                dt = ds.Tables[0];
             }
             else if(Lf2.id() == 1)
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id,password   FROM menage_view ", cn);
-                DataSet ds = new DataSet();
+                da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id  FROM menage_view ", cn);
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
+                dt = ds.Tables[0];
             }
             else
             {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id  FROM menage_view ", cn);
-                DataSet ds = new DataSet();
+                da = new SqlDataAdapter("SELECT job_title ,s_name ,staff_id ,salary,location_id  FROM menage_view ", cn);
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
+                dt = ds.Tables[0];
+            }
+            if (Lf2.id() != 0)
+            {
+                btn_Insert.Enabled = false;
+                btn_Update.Enabled = false;
+                btn_Delete.Enabled = false;
             }
             cn.Close();
             /*SqlConnection cn = new SqlConnection(cnStr);
@@ -83,6 +96,32 @@ namespace Restaurant
             DataSet ds = new DataSet();
             da.Fill(ds);
             dataGridView1.DataSource = ds.Tables[0];*/
+        }
+
+        private void load()
+        {
+            cboBox_Work.Items.Clear();
+            SqlConnection cn = new SqlConnection(cnStr);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT job_title FROM jobs", cn);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DataTable dt = new DataTable();
+            dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
+                cboBox_Work.Items.Add(dt.Rows[i]["job_title"].ToString());
+        }
+        private void load2()
+        { 
+            cboBox_Location.Items.Clear();
+            SqlConnection cn = new SqlConnection(cnStr);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT location_id FROM branches", cn);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DataTable dt = new DataTable();
+            dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
+                cboBox_Location.Items.Add(dt.Rows[i]["location_id"].ToString());
+
         }
 
         private void ID_Keypress(object sender, KeyPressEventArgs e)
@@ -197,6 +236,26 @@ namespace Restaurant
             cboBox_Name.DataSource = dt;
             cboBox_Name.DisplayMember = "s_name";
             cn.Close();
+        }
+
+        private void cboBox_Name_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string jname = cboBox_Name.Text;
+                SqlConnection cn = new SqlConnection(cnStr);
+                cn.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT staff_id FROM staffs WHERE s_name = N'" + jname + "'", cn);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                DataTable dt = ds.Tables[0];
+                tb_Account.Text = dt.Rows[0]["staff_id"].ToString();
+                cn.Close();
+            }
+            catch
+            {
+                tb_Account.Text = "0";
+            }
         }
     }
 }

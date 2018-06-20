@@ -75,12 +75,6 @@
             // 
             this.cboBox_Kind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboBox_Kind.FormattingEnabled = true;
-            this.cboBox_Kind.Items.AddRange(new object[] {
-            "麵類",
-            "飯類",
-            "湯品",
-            "點心",
-            "飲料"});
             this.cboBox_Kind.Location = new System.Drawing.Point(12, 52);
             this.cboBox_Kind.Name = "cboBox_Kind";
             this.cboBox_Kind.Size = new System.Drawing.Size(121, 20);
@@ -94,6 +88,7 @@
             this.cboBox_MealName.Name = "cboBox_MealName";
             this.cboBox_MealName.Size = new System.Drawing.Size(121, 20);
             this.cboBox_MealName.TabIndex = 5;
+            this.cboBox_MealName.SelectedIndexChanged += new System.EventHandler(this.cboBox_MealName_SelectedIndexChanged);
             // 
             // tb_sale
             // 

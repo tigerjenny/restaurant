@@ -76,6 +76,7 @@
             this.cboBox_Items.Name = "cboBox_Items";
             this.cboBox_Items.Size = new System.Drawing.Size(121, 20);
             this.cboBox_Items.TabIndex = 5;
+            this.cboBox_Items.SelectedIndexChanged += new System.EventHandler(this.cboBox_Items_SelectedIndexChanged);
             // 
             // tb_stock
             // 

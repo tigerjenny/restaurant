@@ -111,12 +111,6 @@
             // 
             this.cboBox_Work.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboBox_Work.FormattingEnabled = true;
-            this.cboBox_Work.Items.AddRange(new object[] {
-            "老闆",
-            "經理",
-            "外場",
-            "廚師",
-            "P.T."});
             this.cboBox_Work.Location = new System.Drawing.Point(16, 32);
             this.cboBox_Work.Name = "cboBox_Work";
             this.cboBox_Work.Size = new System.Drawing.Size(121, 20);
@@ -130,15 +124,12 @@
             this.cboBox_Name.Name = "cboBox_Name";
             this.cboBox_Name.Size = new System.Drawing.Size(121, 20);
             this.cboBox_Name.TabIndex = 8;
+            this.cboBox_Name.SelectedIndexChanged += new System.EventHandler(this.cboBox_Name_SelectedIndexChanged);
             // 
             // cboBox_Location
             // 
             this.cboBox_Location.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboBox_Location.FormattingEnabled = true;
-            this.cboBox_Location.Items.AddRange(new object[] {
-            "北",
-            "中",
-            "南"});
             this.cboBox_Location.Location = new System.Drawing.Point(16, 140);
             this.cboBox_Location.Name = "cboBox_Location";
             this.cboBox_Location.Size = new System.Drawing.Size(121, 20);

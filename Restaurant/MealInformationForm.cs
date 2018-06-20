@@ -24,6 +24,19 @@ namespace Restaurant
 
         private void MealInformationForm_Load(object sender, EventArgs e)
         {
+            LoginForm Lf3;
+            Lf3 = new LoginForm();
+
+            if (Lf3.id() != 0)
+            {
+                if (Lf3.id() != 1)
+                {
+                    btn_Insert.Enabled = false;
+                    btn_Update.Enabled = false;
+                    btn_Delete.Enabled = false;
+                }
+            }
+
             /*for(int i = 0; i < kinds.Length; i++)
             {
                 cboBox_Kind.Items.Add(kinds[i]);
@@ -33,7 +46,22 @@ namespace Restaurant
             DataSet ds = new DataSet();
             da.Fill(ds);
             dataGridView1.DataSource = ds.Tables[0];
+            load();
         }
+
+        private void load()
+        {
+            cboBox_Kind.Items.Clear();
+            SqlConnection cn = new SqlConnection(cnStr);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT sort FROM categories ", cn);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DataTable dt = new DataTable();
+            dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
+                cboBox_Kind.Items.Add(dt.Rows[i]["sort"].ToString());
+        }
+
         private void tex_Keypress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar < '0' || e.KeyChar > '9')
@@ -146,6 +174,26 @@ namespace Restaurant
             cboBox_MealName.DataSource = dt;
             cboBox_MealName.DisplayMember = "m_name";
             cn.Close();
+        }
+
+        private void cboBox_MealName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string mname = cboBox_MealName.Text;
+                SqlConnection cn = new SqlConnection(cnStr);
+                cn.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT price FROM meals WHERE m_name = N'" + mname + "'", cn);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                DataTable dt = ds.Tables[0];
+                tb_sale.Text = dt.Rows[0]["price"].ToString();
+                cn.Close();
+            }
+            catch
+            {
+                tb_sale.Text = "0";
+            }
         }
     }
 }
